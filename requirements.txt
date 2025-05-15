@@ -1,0 +1,7 @@
+streamlit>=1.30.0
+requests
+python-dotenv
+pydantic>=2.0.0
+pillow
+langgraph>=0.2.0
+numpy
