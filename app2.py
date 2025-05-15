@@ -444,11 +444,11 @@ def show_workflow_diagram():
         st.sidebar.subheader("About IHC Protein Markers")
         st.sidebar.markdown("""
         Common protein markers and their significance:
-        - **HER2**: Human epidermal growth factor receptor 2 (breast, gastric cancers)
-        - **ER/PR**: Hormone receptors (breast cancer)
-        - **Ki-67**: Proliferation marker (multiple cancers)
-        - **PD-L1**: Immune checkpoint (immunotherapy response)
-        - **p53**: Tumor suppressor (multiple cancers)
+        - **FKBP6**: Potential role in cellular processes
+        - **ZNF516**: Transcriptional regulation
+        - **INTS1**: Integrator complex component
+        - **GGTLA4**: Related to GGT family
+        - **Other**: Unknown significance (all other markers)
         """)
         logger.info("show_workflow_diagram rendered successfully")
     except Exception as e:
