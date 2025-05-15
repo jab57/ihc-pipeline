@@ -252,7 +252,8 @@ def process_malignancy_detection(state: IHCAnalysisState) -> Dict[str, Any]:
         if not state.image or not state.patient_info:
             raise ValueError("Missing image or patient information for analysis")
 
-        malignancy_prompt = f"""Analyze the IHC-stained cervical tissue image for {state.patient_info.protein_type} based on visible features. Ignore external metadata.
+        malignancy_prompt = f"""Analyze the IHC-stained cervical tissue image for {state.patient_info.protein_type} based on visible features. 
+        Ignore external metadata. Take any symptom data provided in {state.patient_info.symptoms} into consideration. 
 
         Evaluate malignancy signs:
         1. Nuclear pleomorphism
