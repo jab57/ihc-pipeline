@@ -420,9 +420,7 @@ def run_ihc_analysis_workflow(image_bytes: bytes, patient_info: Dict[str, Any]) 
 
 # Common IHC protein markers
 COMMON_IHC_MARKERS = [
-    "FKBP6", "INTS1", "ZNF516", "GGTLA4", "HER2", "ER", "PR", "Ki-67", "p53", "CD20", "CD3", "CD4", "CD8", "CD45",
-    "PD-L1", "EGFR", "ALK", "ROS1", "BRAF", "KRAS", "CD31", "Cytokeratin",
-    "E-cadherin", "MMR proteins", "Other"
+    "FKBP6", "INTS1", "ZNF516", "GGTLA4", "Other"
 ]
 
 def show_workflow_diagram():
