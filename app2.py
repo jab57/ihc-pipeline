@@ -24,6 +24,7 @@ np.random.seed(42)
 # Load environment variables
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+APP_PASSWORD = os.getenv("APP_PASSWORD")  # Define APP_PASSWORD globally
 logger.info(f"GROQ_API_KEY loaded: {'Yes' if GROQ_API_KEY else 'No'}")
 
 # Groq API settings
@@ -457,15 +458,36 @@ def show_workflow_diagram():
 def main():
     logger.info("Main function called")
     try:
+        # Check for required environment variables
         if not GROQ_API_KEY:
             st.error("GROQ_API_KEY not found. Please set it in the .env file.")
             logger.error("Missing GROQ_API_KEY")
             return
+        if not APP_PASSWORD:
+            st.error("APP_PASSWORD not found. Please set it in the .env file.")
+            logger.error("Missing APP_PASSWORD")
+            return
 
+        # Initialize session state for authentication
+        if 'authenticated' not in st.session_state:
+            st.session_state.authenticated = False
+
+        # Show password input if not authenticated
+        if not st.session_state.authenticated:
+            st.title("Login to IHC Analysis App")
+            password = st.text_input("Enter Password", type="password")
+            if st.button("Login"):
+                if password == APP_PASSWORD:
+                    st.session_state.authenticated = True
+                    st.rerun()  # Rerun to refresh UI and show main content
+                else:
+                    st.error("Incorrect password")
+                    logger.warning("Failed login attempt")
+            return
+
+        # Main app content (only shown if authenticated)
         st.title("IHC Analysis & Treatment Recommendation")
-        logger.info("Title rendered")
         st.write("Upload an immunohistochemistry (IHC) stained tissue image for analysis")
-        logger.info("Initial UI elements rendered")
 
         with st.expander("Patient Information", expanded=True):
             age = st.number_input("Patient Age", min_value=0, max_value=120, value=50)
@@ -474,10 +496,8 @@ def main():
             protein_type = protein_selection
             if protein_selection == "Other":
                 protein_type = st.text_input("Specify Protein Target", "")
-            logger.info("Patient information form rendered")
 
         uploaded_file = st.file_uploader("Upload IHC Image", type=["jpg", "jpeg", "png"])
-        logger.info("File uploader rendered")
 
         if st.button("Run Analysis") and uploaded_file:
             logger.info("Run Analysis button clicked")
@@ -489,7 +509,6 @@ def main():
                         "symptoms": symptoms,
                         "protein_type": protein_type
                     }
-                    logger.info("Starting workflow execution")
                     results = run_ihc_analysis_workflow(ihc_image, patient_info)
 
                     if "error" in results:
@@ -527,13 +546,11 @@ def main():
                         st.warning(results['recommendation'] or "No treatment recommendation available")
                         
                         st.caption("Note: This is an AI-generated recommendation. Always consult with a qualified healthcare professional.")
-                        logger.info("Results displayed")
             except Exception as e:
                 st.error(f"Error processing image: {str(e)}")
                 logger.error(f"Error in analysis: {str(e)}\n{traceback.format_exc()}")
         elif not uploaded_file:
             st.warning("Please upload an image to analyze.")
-            logger.info("No file uploaded")
     except Exception as e:
         st.error(f"Error initializing app: {str(e)}")
         logger.error(f"Main function error: {str(e)}\n{traceback.format_exc()}")
